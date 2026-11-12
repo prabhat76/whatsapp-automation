@@ -22,9 +22,8 @@ export default function ForgotPasswordPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const supabase = createClient();
-
   const handleReset = async (e: React.FormEvent) => {
+    const supabase = createClient();
     e.preventDefault();
     setError(null);
     setLoading(true);
