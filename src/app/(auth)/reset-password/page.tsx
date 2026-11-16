@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 // ============================================================
 // /reset-password — the form the password-reset email leads to.
 //
@@ -35,8 +37,6 @@ type Status = "checking" | "ready" | "expired" | "done";
 
 export default function ResetPasswordPage() {
   const t = useTranslations("ResetPasswordPage");
-  const supabase = createClient();
-
   const [status, setStatus] = useState<Status>("checking");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -45,6 +45,7 @@ export default function ResetPasswordPage() {
 
   useEffect(() => {
     let cancelled = false;
+    const supabase = createClient();
     // The callback wrote the session cookies server-side; the browser
     // client reads them here. No user → the link didn't yield a session.
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -53,7 +54,7 @@ export default function ResetPasswordPage() {
     return () => {
       cancelled = true;
     };
-  }, [supabase]);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,7 +71,7 @@ export default function ResetPasswordPage() {
     }
 
     setSaving(true);
-    const { error } = await supabase.auth.updateUser({ password });
+    const { error } = await createClient().auth.updateUser({ password });
     setSaving(false);
 
     if (error) {
